@@ -29,7 +29,7 @@ struct tupleImpl<id, Head, args...>:
 	tupleImpl<id, Head, args...>(){}
 	tupleImpl<id, Head, args...>(const Head &x, const args &...xs):element(x), next(xs...) {}
 	friend ostream& operator << (ostream &out, const tupleImpl<id, Head, args...>& ele) {
-		out << ele.getVal() << " " << dynamic_cast<const next&>(ele);
+		out << ele.element::x << " " << dynamic_cast<const next&>(ele);
 		return out;
 	}
 };
