@@ -13,7 +13,9 @@ struct tupleImpl;
 
 template<size_t id>
 struct tupleImpl<id> {
-
+	friend ostream& operator << (ostream &out, const tupleImpl<id>& ele) {
+		return out;
+	}
 };
 template<size_t id, typename Head, typename ...args>
 struct tupleImpl<id, Head, args...>:
@@ -21,8 +23,15 @@ struct tupleImpl<id, Head, args...>:
 	typedef Head typeValue; 
 	typedef tupleElement<id, Head> element;
 	typedef tupleImpl<id + 1, args...> next;
+	Head getVal() const {
+		return element::x;
+	}
 	tupleImpl<id, Head, args...>(){}
 	tupleImpl<id, Head, args...>(const Head &x, const args &...xs):element(x), next(xs...) {}
+	friend ostream& operator << (ostream &out, const tupleImpl<id, Head, args...>& ele) {
+		out << ele.getVal() << " " << static_cast<next>(ele);
+		return out;
+	}
 };
 
 template<size_t id,typename Head, typename ...args>
@@ -34,7 +43,8 @@ template<typename ...args>
 using Tuple = tupleImpl<0, args...>;
 
 int main() {
-	// Tuple<int,double,long long> x(1, 1.1234, 1LL<<55);
+	Tuple<int,double,long long> x(1, 1.1234, 1LL<<55);
+	cout << x << endl;
 	Tuple<int, float, std::string> tuple(5, 8.3, "Foo");
     // getVal<0>(tuple) = 5;
     // getVal<1>(tuple) = 8.3;
